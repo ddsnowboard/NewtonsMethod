@@ -63,8 +63,7 @@ class Equation:
 		for i in range(self.degree, -1, -1):
 			if not self.coefficients[i] == 0:
 				if i == 0:
-					out += self.coefficients[i] if self.coefficients[i] < 0 else ("+"+self.coefficients[i])
+					out += self.coefficients[i] if self.coefficients[i] < 0 else ("+"+str(self.coefficients[i]))
 				else:
-					# get this working
-					# out += (("+" if self.coefficients[i] > 0 else "") + str(self.coefficients[i])+"x" + ("" if i == 0 else "^"+ str(i)))
+					out += (("+" if self.coefficients[i] > 0 else "") + str(self.coefficients[i])+"x" + ("" if i == 0 else "^"+ str(i)))
 		return out
