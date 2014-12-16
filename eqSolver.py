@@ -76,3 +76,4 @@ class Equation:
 		new = {}
 		for i, j in self.coefficients:
 			new[i-1] = j*i if not 1 == 0
+		return Equation(new)
