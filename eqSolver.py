@@ -6,19 +6,19 @@ class Equation:
 		if type(eq) == type(""):
 			self.coefficients = defaultdict(float)
 			self.eq = re.subn(r"^y=|=y$", '', eq)[0]   # 2x^2-3x+5
-			self.eq = self.eq.replace('^', '**').replace("+", " +").replace("-", ' -')  # 2x**2 -3x +5
-			self.terms = self.eq.split(" ")	 # "2x**2", "-3x", "+5"
+			self.eq = self.eq.replace("+", " +").replace("-", ' -')  # 2x^2 -3x +5
+			self.terms = self.eq.split(" ")	 # "2x^2", "-3x", "+5"
 			self.terms = [i for i in self.terms if i != '']
 			for i in self.terms:
 				if not re.compile(r"[A-Za-z]").search(i):
 					self.coefficients[0] += float(i)  # "+5"
 				elif re.compile(r"[\+-]?[\d\.]+[A-Za-z]$").search(i):
 					self.coefficients[1]+=float(re.compile(r"[A-Za-z]").subn('',i)[0])  	#"-3" 
-				elif re.compile(r"[\+-]?[\d\.]+[A-Za-z]\*\*\d+").match(i):
-					self.coefficients[int(i[i.index("**")+2:])] += float(i[:re.compile("[A-Za-z]").search(i).span()[1]-1]) # '2'
+				elif re.compile(r"[\+-]?[\d\.]+[A-Za-z][^][0-9]+").match(i):
+					self.coefficients[int(i[i.index("^")+1:])] += float(i[:re.compile("[A-Za-z]").search(i).span()[1]-1]) # '2'
 		elif type(eq) == type({}):
 			self.coefficients = defaultdict(float)
-			for i, j in eq:
+			for i, j in eq.items():
 				self.coefficients[i] = j
 		self.degree = len(self.coefficients)-1
 	def evaluate(self, x):
@@ -74,6 +74,8 @@ class Equation:
 		return out
 	def derivative(self):
 		new = {}
-		for i, j in self.coefficients:
-			new[i-1] = j*i if not 1 == 0
-		return Equation(new)
+		for i, j in self.coefficients.items():
+			new[i-1] = j*i if not i == 0 else 0
+		return Equation(new) if not Equation(new).degree == 0 else Equation("0")
+# Testing
+n = Equation("25x^5-55x^6+54x^2-5x+5")
