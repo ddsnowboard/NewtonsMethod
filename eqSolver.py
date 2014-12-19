@@ -6,7 +6,7 @@ class Equation:
 		if type(eq) == type(""):
 			self.coefficients = defaultdict(float)
 			self.eq = re.subn(r"^y=|=y$", '', eq)[0]   # 2x^2-3x+5
-			self.eq = self.eq..replace("**", "^").replace("+", " +").replace("-", ' -')  # 2x^2 -3x +5
+			self.eq = self.eq.replace("**", "^").replace("+", " +").replace("-", ' -')  # 2x^2 -3x +5
 			self.terms = self.eq.split(" ")	 # "2x^2", "-3x", "+5"
 			self.terms = [i for i in self.terms if i != '']
 			for i in self.terms:

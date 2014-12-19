@@ -21,3 +21,4 @@ except ValueError:
 		if x_terms[-1] == x_terms[-2]:
 			break
 pprint.PrettyPrinter().pprint(x_terms)
+print("The answer is {}".format(x_terms[-1]))
