@@ -12,15 +12,18 @@ class Equation:
 			for i in self.terms:
 				if not re.compile(r"[A-Za-z]").search(i):
 					self.coefficients[0] += float(i)  # "+5"
-				elif re.compile(r"[\+-]?[\d\.]+[A-Za-z]$").search(i):
-					self.coefficients[1]+=float(re.compile(r"[A-Za-z]").subn('',i)[0])  	#"-3" 
-				elif re.compile(r"[\+-]?[\d\.]+[A-Za-z][^][0-9]+").match(i):
+				elif re.compile(r"[\+-]?[\d\.]+[A-Za-z][\^][0-9]+").match(i):
 					self.coefficients[int(i[i.index("^")+1:])] += float(i[:re.compile("[A-Za-z]").search(i).span()[1]-1]) # '2'
+				elif re.compile(r"[\+-]?[\d\.]+[A-Za-z]").search(i):
+					self.coefficients[1]+=float(re.compile(r"[A-Za-z]").subn('',i)[0])  	#"-3" 
 		elif type(eq) == type({}):
 			self.coefficients = defaultdict(float)
 			for i, j in eq.items():
 				self.coefficients[i] = j
-		self.degree = len(self.coefficients)-1
+		self.degree = 0
+		for i, j in self.coefficients.items():
+			if i > self.degree:
+				self.degree = i
 	def evaluate(self, x):
 		end = 0
 		for i, j in self.coefficients.items():
