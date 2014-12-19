@@ -24,6 +24,16 @@ class Equation:
 		for i, j in self.coefficients.items():
 			if i > self.degree:
 				self.degree = i
+	def handleFraction(s):
+		pattern = re.compile(r"(?P<top>[\d\.]+)[/](?P<bottom>[\d\.]+)")
+		if not s.contains("/"):
+			return float(s)
+		elif not pattern.match(s):
+			return float(s)
+		else:
+			match = pattern.match(s)
+			return float(match.group("top"))/ float(match.group("bottom"))
+		return float(s)
 	def evaluate(self, x):
 		end = 0
 		for i, j in self.coefficients.items():
