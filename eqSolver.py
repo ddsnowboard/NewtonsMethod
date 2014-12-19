@@ -6,7 +6,7 @@ class Equation:
 		if type(eq) == type(""):
 			self.coefficients = defaultdict(float)
 			self.eq = re.subn(r"^y=|=y$", '', eq)[0]   # 2x^2-3x+5
-			self.eq = self.eq.replace("+", " +").replace("-", ' -')  # 2x^2 -3x +5
+			self.eq = self.eq..replace("**", "^").replace("+", " +").replace("-", ' -')  # 2x^2 -3x +5
 			self.terms = self.eq.split(" ")	 # "2x^2", "-3x", "+5"
 			self.terms = [i for i in self.terms if i != '']
 			for i in self.terms:
@@ -79,8 +79,19 @@ class Equation:
 		new = {}
 		for i, j in self.coefficients.items():
 			new[i-1] = j*i if i != 0 else 0
-		return Equation(new) if not Equation(new).degree == 0 else Equation("0")
-	def __eq__(self, other): # Finish this, and make a __call__() or whatever it's called. Then use this above in derivative to see if the equation matches y=0 exactly instead of just seeing if the degree is zero, so you can have constant functions that work. 
+		return Equation(new)
+	def __eq__(self, other):  
 		if self.degree == other.degree:
-			if 
-print(Equation("5x").degree)
+			if self.coefficients == other.coefficients:
+				return True
+		return False
+	def __ne__(self, other):
+		return not self.__eq__(self, other)
+	def __bool__(self, other):
+		return self == Equation("0")
+	def __getitem__(self, key):
+		return self.coefficients[key]
+	def __setitem__(self, key, value):
+		self.coefficients[key] = value
+	def __call__(self, x):
+		return self.evaluate(x)
