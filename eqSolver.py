@@ -78,7 +78,9 @@ class Equation:
 	def derivative(self):
 		new = {}
 		for i, j in self.coefficients.items():
-			new[i-1] = j*i if not i == 0 else 0
+			new[i-1] = j*i if i != 0 else 0
 		return Equation(new) if not Equation(new).degree == 0 else Equation("0")
-# Testing
-n = Equation("25x^5-55x^6+54x^2-5x+5")
+	def __eq__(self, other): # Finish this, and make a __call__() or whatever it's called. Then use this above in derivative to see if the equation matches y=0 exactly instead of just seeing if the degree is zero, so you can have constant functions that work. 
+		if self.degree == other.degree:
+			if 
+print(Equation("5x").degree)
