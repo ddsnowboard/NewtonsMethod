@@ -103,24 +103,21 @@ class Equation:
 	def __str__(self):
 		out = ""
 		sortedDict = OrderedDict(sorted(self.coefficients.items(), key=lambda x: -1*abs(x[0])))
-		for i, j in sortedDict.items():
-			if j == 0:
+		for degree, number in sortedDict.items():
+			if number == 0:
 				continue
-			elif i == 0:
-				if j > 0:
-					out+= '+' + str(j)
+			elif degree == 0:
+				out+= ('+' if number > 0 else "") + str(number)
+			elif number == 1:
+				if number > 0:
+					out+= '+' + str(number) + 'x'
 				else:
-					out += str(j)
-			elif i == 1:
-				if j > 0:
-					out+= '+' + str(j) + 'x'
-				else:
-					out += str(j) + 'x'
+					out += str(number) + 'x'
 			else:
-				if j > 0 and i != self.degree:
-					out+='+' + str(j) + "x^" + str(i)
+				if number > 0 and degree != self.degree:
+					out+='+' + str(number) + "x^" + str(i)
 				else:
-					out+= str(j) + 'x^' + str(i)
+					out+= str(number) + 'x^' + str(i)
 		return out
 	def derivative(self):
 		new = {}
