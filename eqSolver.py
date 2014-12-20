@@ -16,9 +16,9 @@ def handleFraction(s):
 class Equation:
 	def __init__(self, eq):	# y=2x^2-3x+5
 		if type(eq) == type(""):
-			self.regexes = {"normal" : re.compile(r"(?P<number>([\+-]?([\d\./])+))?[A-Za-z][\^](?P<exponent>[0-9/]+)"),
+			self.regexes = {"normal" : re.compile(r"(?P<number>[\+-]?([\d\./])*)?[A-Za-z][\^](?P<exponent>[0-9/]+)"),
 							"constant" : re.compile(r"^[\+-]?[\d]+$"), 
-							"first" : re.compile(r"(?P<number>[\+-]?[\d\.\\]+)[A-Za-z]")}						  
+							"first" : re.compile(r"(?P<number>[\+-]?[\d\./]*)?[A-Za-z]")}						  
 			self.coefficients = defaultdict(float)
 			self.eq = re.subn(r"^y=|=y$", '', eq)[0]   # 2x^2-3x+5
 			self.eq = self.eq.replace("**", "^").replace("+", " +").replace("-", ' -')  # 2x^2 -3x +5
@@ -29,13 +29,22 @@ class Equation:
 					self.coefficients[0] += handleFraction(i)  # "+5"
 				elif self.regexes['normal'].match(i):
 					match = self.regexes['normal'].match(i)
-					if match.group("number"):
-						self.coefficients[handleFraction(match.group("exponent"))] += handleFraction(match.group("number")) # '2'
+					if match.group("number") and match.group("number") != '+':
+						if match.group("number") == "-":
+							self.coefficients[handleFraction(match.group("exponent"))] -= 1
+						else:
+							self.coefficients[handleFraction(match.group("exponent"))] += handleFraction(match.group("number")) # '2'
 					else:
 						self.coefficients[handleFraction(match.group("exponent"))] += 1
-				elif self.regexes["first"].search(i):
+				elif self.regexes["first"].match(i):
 					match = self.regexes["first"].match(i)
-					self.coefficients[1]+=handleFraction(match.group('number'))  	#"-3" 
+					if match.group("number") and match.group("number") != "+":
+						if match.group("number") == '-':
+							self.coefficients[1] -= 1
+						else:
+							self.coefficients[1]+=handleFraction(match.group('number'))  	#"-3" 
+					else:
+						self.coefficients[1]+=1
 		elif type(eq) == type({}):
 			self.coefficients = defaultdict(float)
 			for i, j in eq.items():
@@ -115,3 +124,4 @@ class Equation:
 		self.coefficients[key] = value
 	def __call__(self, x):
 		return self.evaluate(x)
+e = Equation("x^2+x+1")
