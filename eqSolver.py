@@ -1,21 +1,41 @@
 import re
 from collections import defaultdict
 import math
+def handleFraction(s):
+		pattern = re.compile(r"(?P<top>[\d\.]+)[/](?P<bottom>[\d\.]+)")
+		if not '/' in s:
+			return float(s)
+		elif s.count("/") > 1:
+			raise ValueError()
+		elif not pattern.match(s):
+			return float(s)
+		else:
+			match = pattern.match(s)
+			return float(match.group("top"))/ float(match.group("bottom"))
+		return float(s)
 class Equation:
 	def __init__(self, eq):	# y=2x^2-3x+5
 		if type(eq) == type(""):
+			self.regexes = {"normal" : re.compile(r"(?P<number>([\+-]?([\d\./])+))?[A-Za-z][\^](?P<exponent>[0-9/]+)"),
+							"constant" : re.compile(r"^[\+-]?[\d]+$"), 
+							"first" : re.compile(r"(?P<number>[\+-]?[\d\.\\]+)[A-Za-z]")}						  
 			self.coefficients = defaultdict(float)
 			self.eq = re.subn(r"^y=|=y$", '', eq)[0]   # 2x^2-3x+5
 			self.eq = self.eq.replace("**", "^").replace("+", " +").replace("-", ' -')  # 2x^2 -3x +5
 			self.terms = self.eq.split(" ")	 # "2x^2", "-3x", "+5"
 			self.terms = [i for i in self.terms if i != '']
 			for i in self.terms:
-				if not re.compile(r"[A-Za-z]").search(i):
-					self.coefficients[0] += float(i)  # "+5"
-				elif re.compile(r"[\+-]?[\d\.]+[A-Za-z][\^][0-9]+").match(i):
-					self.coefficients[int(i[i.index("^")+1:])] += float(i[:re.compile("[A-Za-z]").search(i).span()[1]-1]) # '2'
-				elif re.compile(r"[\+-]?[\d\.]+[A-Za-z]").search(i):
-					self.coefficients[1]+=float(re.compile(r"[A-Za-z]").subn('',i)[0])  	#"-3" 
+				if self.regexes['constant'].match(i):
+					self.coefficients[0] += handleFraction(i)  # "+5"
+				elif self.regexes['normal'].match(i):
+					match = self.regexes['normal'].match(i)
+					if match.group("number"):
+						self.coefficients[handleFraction(match.group("exponent"))] += handleFraction(match.group("number")) # '2'
+					else:
+						self.coefficients[handleFraction(match.group("exponent"))] += 1
+				elif self.regexes["first"].search(i):
+					match = self.regexes["first"].match(i)
+					self.coefficients[1]+=handleFraction(match.group('number'))  	#"-3" 
 		elif type(eq) == type({}):
 			self.coefficients = defaultdict(float)
 			for i, j in eq.items():
@@ -24,16 +44,6 @@ class Equation:
 		for i, j in self.coefficients.items():
 			if i > self.degree:
 				self.degree = i
-	def handleFraction(s):
-		pattern = re.compile(r"(?P<top>[\d\.]+)[/](?P<bottom>[\d\.]+)")
-		if not s.contains("/"):
-			return float(s)
-		elif not pattern.match(s):
-			return float(s)
-		else:
-			match = pattern.match(s)
-			return float(match.group("top"))/ float(match.group("bottom"))
-		return float(s)
 	def evaluate(self, x):
 		end = 0
 		for i, j in self.coefficients.items():
@@ -78,7 +88,7 @@ class Equation:
 			raise Error("I really can't get an accurate intersection with just this data.")
 	def __str__(self):
 		out = ""
-		for i in range(self.degree, -1, -1):
+		for i in range(int(self.degree), -1, -1):
 			if not self.coefficients[i] == 0:
 				if i == 0:
 					out += str(self.coefficients[i]) if self.coefficients[i] < 0 else ("+"+str(self.coefficients[i]))
