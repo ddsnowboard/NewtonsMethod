@@ -1,5 +1,6 @@
 import re
 from collections import defaultdict
+from collections import OrderedDict
 import math
 def handleFraction(s):
 		pattern = re.compile(r"(?P<top>[\d\.]+)[/](?P<bottom>[\d\.]+)")
@@ -101,12 +102,25 @@ class Equation:
 			raise Error("I really can't get an accurate intersection with just this data.")
 	def __str__(self):
 		out = ""
-		for i in range(roundUp(self.degree), -1, -1):
-			if not self.coefficients[i] == 0:
-				if i == 0:
-					out += str(self.coefficients[i]) if self.coefficients[i] < 0 else ("+"+str(self.coefficients[i]))
+		sortedDict = OrderedDict(sorted(self.coefficients.items(), key=lambda x: -1*abs(x[0])))
+		for i, j in sortedDict.items():
+			if j == 0:
+				continue
+			elif i == 0:
+				if j > 0:
+					out+= '+' + str(j)
 				else:
-					out += (("+" if self.coefficients[i] > 0 else "") + str(self.coefficients[i])+"x" + ("" if i == 1 else "^"+ str(i)))
+					out += str(j)
+			elif i == 1:
+				if j > 0:
+					out+= '+' + str(j) + 'x'
+				else:
+					out += str(j) + 'x'
+			else:
+				if j > 0 and i != self.degree:
+					out+='+' + str(j) + "x^" + str(i)
+				else:
+					out+= str(j) + 'x^' + str(i)
 		return out
 	def derivative(self):
 		new = {}
