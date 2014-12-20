@@ -13,6 +13,10 @@ def handleFraction(s):
 			match = pattern.match(s)
 			return float(match.group("top"))/ float(match.group("bottom"))
 		return float(s)
+def roundUp(i):
+	if i%1 > 0:
+		return int(i)+1
+	return i
 class Equation:
 	def __init__(self, eq):	# y=2x^2-3x+5
 		if type(eq) == type(""):
@@ -97,7 +101,7 @@ class Equation:
 			raise Error("I really can't get an accurate intersection with just this data.")
 	def __str__(self):
 		out = ""
-		for i in range(int(self.degree), -1, -1):
+		for i in range(roundUp(self.degree), -1, -1):
 			if not self.coefficients[i] == 0:
 				if i == 0:
 					out += str(self.coefficients[i]) if self.coefficients[i] < 0 else ("+"+str(self.coefficients[i]))
