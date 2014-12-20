@@ -142,4 +142,3 @@ class Equation:
 		self.coefficients[key] = value
 	def __call__(self, x):
 		return self.evaluate(x)
-e = Equation("x^2+x+1")
