@@ -3,7 +3,7 @@ from collections import defaultdict
 from collections import OrderedDict
 import math
 def handleFraction(s):
-		pattern = re.compile(r"(?P<top>[\d\.]+)[/](?P<bottom>[\d\.]+)")
+		pattern = re.compile(r"(?P<top>[\+-]?[\d\.]+)[/](?P<bottom>[\d\.]+)")
 		if not '/' in s:
 			return float(s)
 		elif s.count("/") > 1:
@@ -108,16 +108,14 @@ class Equation:
 				continue
 			elif degree == 0:
 				out+= ('+' if number > 0 else "") + str(number)
-			elif number == 1:
-				if number > 0:
-					out+= '+' + str(number) + 'x'
-				else:
-					out += str(number) + 'x'
+			elif number == 1 and degree == 1:
+				out+= '+x'
+			elif number == -1 and degree == 1:
+				out += '-x'
+			elif degree == 1:
+				out += "{}{}x".format(('+' if number > 0 and degree != self.degree else ''), number)
 			else:
-				if number > 0 and degree != self.degree:
-					out+='+' + str(number) + "x^" + str(i)
-				else:
-					out+= str(number) + 'x^' + str(i)
+				out+="{}{}x^{}".format(('+' if number > 0 and degree != self.degree else ""),str(number),str(degree))
 		return out
 	def derivative(self):
 		new = {}
