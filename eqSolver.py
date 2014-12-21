@@ -61,7 +61,10 @@ class Equation:
 	def evaluate(self, x):
 		end = 0
 		for i, j in self.coefficients.items():
-			end+=j*x**i
+			try:
+				end+=j*x**i
+			except ZeroDivisionError:
+				raise new Exception("I had to divide by zero. I either can't do this equation or you gave me a bad x1. Try again")
 		return end
 	def zero(self):
 		if not self.degree == 2:
