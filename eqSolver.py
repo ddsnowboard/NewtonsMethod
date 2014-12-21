@@ -22,7 +22,7 @@ class Equation:
 	def __init__(self, eq):	# y=2x^2-3x+5
 		if type(eq) == type(""):
 			self.regexes = {"normal" : re.compile(r"(?P<number>[\+-]?([\d\./])*)?[A-Za-z][\^](?P<exponent>[0-9/]+)"),
-							"constant" : re.compile(r"^[\+-]?[\d]+$"), 
+							"constant" : re.compile(r"^[\+-]?[\d/]+$"), 
 							"first" : re.compile(r"(?P<number>[\+-]?[\d\./]*)?[A-Za-z]")}						  
 			self.coefficients = defaultdict(float)
 			self.eq = re.subn(r"^y=|=y$", '', eq)[0]   # 2x^2-3x+5
@@ -64,7 +64,7 @@ class Equation:
 			try:
 				end+=j*x**i
 			except ZeroDivisionError:
-				raise new Exception("I had to divide by zero. I either can't do this equation or you gave me a bad x1. Try again")
+				raise Exception("I had to divide by zero. I either can't do this equation or you gave me a bad x1. Try again")
 		return end
 	def zero(self):
 		if not self.degree == 2:
