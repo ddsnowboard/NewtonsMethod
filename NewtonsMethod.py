@@ -5,11 +5,12 @@ def newtonsMethod(eq, x, derivative=None):
 	if derivative is None:
 		derivative = eq.derivative()
 	return x-(eq.evaluate(x)/derivative.evaluate(x))
-equation = eqSolver.Equation(input("What is the polynomial equation you want?"))
+equation = eqSolver.Equation(input("What is the polynomial equation you want?\n"))
 derivative = equation.derivative()
+clock_break = False
 while True:
 	try:
-		x_terms = [int(input("What x value should I start with?"))]
+		x_terms = [int(input("What x value should I start with?\n"))]
 		break
 	except ValueError:
 		print("That's not a number!")
@@ -26,7 +27,8 @@ except ValueError:
 			print("I couldn't find a root after {} tries".format(len(x_terms)))
 			pprint.PrettyPrinter().pprint(x_terms[-10:])
 			input()
-			exit()
-pprint.PrettyPrinter().pprint(x_terms)
-print("The result is {}".format(x_terms[-1]))
-input()
+			clock_break = True
+if not clock_break:				
+	pprint.PrettyPrinter().pprint(x_terms)
+	print("The result is {}".format(x_terms[-1]))
+	input()
