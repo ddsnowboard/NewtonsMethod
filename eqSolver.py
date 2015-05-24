@@ -3,21 +3,6 @@ from collections import defaultdict
 from collections import OrderedDict
 import math
 from fractions import Fraction
-def handleFraction(s):
-	# TODO: Refactor this to just use the regular Python Fraction object.
-	# This is silly.
-		print("You missed something.")
-		pattern = re.compile(r"(?P<top>[\+-]?[\d\.]+)[/](?P<bottom>[\d\.]+)")
-		if not '/' in s:
-			return float(s)
-		elif s.count("/") > 1:
-			raise ValueError()
-		elif not pattern.match(s):
-			return float(s)
-		else:
-			match = pattern.match(s)
-			return float(match.group("top"))/ float(match.group("bottom"))
-		return float(s)
 def roundUp(i):
 	"""
 	I'm sure this is unnecessary, but I apparently couldn't find a good way to
