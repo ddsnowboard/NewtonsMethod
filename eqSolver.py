@@ -12,10 +12,16 @@ def roundUp(i):
 		return int(i)+1
 	return i
 class Equation:
+	"""
+	This is an object that represents a polynomial equation.
+	It isn't terribly extensible, so you have to be careful what
+	you give it. It will take decimals and fractions as coefficients,
+	and in exponents?
+	"""
 	def __init__(self, eq):	# y=2x^2-3x+5
 		if type(eq) == type(""):
 			self.regexes = {"normal" : re.compile(r"(?P<number>[\+-]?([\d\./])*)?[A-Za-z][\^](?P<exponent>[0-9/]+)"),
-							"constant" : re.compile(r"^[\+-]?[\d/]+$"),
+							"constant" : re.compile(r"^[\+-]?[\d/^]+$"),
 							"first" : re.compile(r"(?P<number>[\+-]?[\d\./]*)?[A-Za-z]")}
 			self.coefficients = defaultdict(float)
 			self.eq = re.subn(r"^y=|=y$", '', eq)[0]   # 2x^2-3x+5
@@ -24,7 +30,7 @@ class Equation:
 			self.terms = [i for i in self.terms if i != '']
 			for i in self.terms:
 				if self.regexes['constant'].match(i):
-					self.coefficients[0] += Fraction(i)  # "+5"
+					self.coefficients[0] += eval(i.replace("^", "**"))  # "+5"
 				elif self.regexes['normal'].match(i):
 					match = self.regexes['normal'].match(i)
 					if match.group("number") and match.group("number") != '+':

@@ -1,2 +1,0 @@
-python NewtonsMethod.py
-PAUSE

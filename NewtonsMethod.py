@@ -1,34 +1,31 @@
-import eqSolver
 import pprint
+import eqSolver
 from time import clock
-def newtonsMethod(eq, x, derivative=None):
+def oneIteration(eq, x, derivative=None):
 	if derivative is None:
 		derivative = eq.derivative()
 	return x-(eq.evaluate(x)/derivative.evaluate(x))
-equation = eqSolver.Equation(input("What is the polynomial equation you want?\n"))
-derivative = equation.derivative()
-clock_break = False
-while True:
+def newtonsMethod(*, eqn, x_terms, initial_x):
+	derivative = eqn.derivative()
+	output = [initial_x]
+	if x_terms:
+		for i in range(x_terms):
+			output.append(oneIteration(eqn, output[-1], derivative))
+		return output
+	else:
+		clock()
+		while True:
+			output.append(oneIteration(eqn, output[-1], derivative))
+			if output[-1] == output[-2]:
+				return output
+			elif clock() > 10:
+				return output
+if __name__ == "__main__":
+	eqn = eqSolver.Equation((input("What is the polynomial equation you want? ")))
 	try:
-		x_terms = [int(input("What x value should I start with?\n"))]
-		break
+		x_terms = int(input("How many times do you want to do the method? Or type nothing if you want to do it until it yields the answer. "))
 	except ValueError:
-		print("That's not a number!")
-try:
-	for i in range(int(input("How many times do you want to do the method? Or type nothing if you want to do it until it yields the answer"))):
-		x_terms.append(newtonsMethod(equation, x_terms[-1], derivative))
-except ValueError:
-	clock()
-	while True:
-		x_terms.append(newtonsMethod(equation, x_terms[-1], derivative))
-		if x_terms[-1] == x_terms[-2]:
-			break
-		elif clock() > 10:
-			print("I couldn't find a root after {} tries".format(len(x_terms)))
-			pprint(x_terms[-10:])
-			input()
-			clock_break = True
-if not clock_break:
-	pprint.PrettyPrinter().pprint(x_terms)
-	print("The result is {}".format(x_terms[-1]))
+		x_terms = None
+	initial_x = int(input("What x value should I start with?\n"))
+	print(newtonsMethod(eqn=eqn, x_terms=x_terms, initial_x=initial_x)[-10:])
 	input()
