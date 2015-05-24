@@ -3,6 +3,8 @@ from collections import defaultdict
 from collections import OrderedDict
 import math
 def handleFraction(s):
+	# TODO: Refactor this to just use the regular Python Fraction object.
+	# This is silly. 
 		pattern = re.compile(r"(?P<top>[\+-]?[\d\.]+)[/](?P<bottom>[\d\.]+)")
 		if not '/' in s:
 			return float(s)
@@ -22,8 +24,8 @@ class Equation:
 	def __init__(self, eq):	# y=2x^2-3x+5
 		if type(eq) == type(""):
 			self.regexes = {"normal" : re.compile(r"(?P<number>[\+-]?([\d\./])*)?[A-Za-z][\^](?P<exponent>[0-9/]+)"),
-							"constant" : re.compile(r"^[\+-]?[\d/]+$"), 
-							"first" : re.compile(r"(?P<number>[\+-]?[\d\./]*)?[A-Za-z]")}						  
+							"constant" : re.compile(r"^[\+-]?[\d/]+$"),
+							"first" : re.compile(r"(?P<number>[\+-]?[\d\./]*)?[A-Za-z]")}
 			self.coefficients = defaultdict(float)
 			self.eq = re.subn(r"^y=|=y$", '', eq)[0]   # 2x^2-3x+5
 			self.eq = self.eq.replace("**", "^").replace("+", " +").replace("-", ' -')  # 2x^2 -3x +5
@@ -47,7 +49,7 @@ class Equation:
 						if match.group("number") == '-':
 							self.coefficients[1] -= 1
 						else:
-							self.coefficients[1]+=handleFraction(match.group('number'))  	#"-3" 
+							self.coefficients[1]+=handleFraction(match.group('number'))  	#"-3"
 					else:
 						self.coefficients[1]+=1
 		elif type(eq) == type({}):
@@ -81,8 +83,8 @@ class Equation:
 		if not type(other) == type(Equation("2x^2-4x+5")):
 			raise Exception("You seem to have made a stupid; this is supposed to take another equation and find the intersection")
 			return
-		# Left will be variables; right will be constants. 
-		# Left starts as self, right starts as other. 
+		# Left will be variables; right will be constants.
+		# Left starts as self, right starts as other.
 		left = defaultdict(float)
 		right = 0
 		for i, j in self.coefficients.items():
@@ -125,7 +127,7 @@ class Equation:
 		for i, j in self.coefficients.items():
 			new[i-1] = j*i if i != 0 else 0
 		return Equation(new)
-	def __eq__(self, other):  
+	def __eq__(self, other):
 		if self.degree == other.degree:
 			if self.coefficients == other.coefficients:
 				return True
