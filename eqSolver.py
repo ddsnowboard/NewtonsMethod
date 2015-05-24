@@ -2,9 +2,11 @@ import re
 from collections import defaultdict
 from collections import OrderedDict
 import math
+from fractions import Fraction
 def handleFraction(s):
 	# TODO: Refactor this to just use the regular Python Fraction object.
-	# This is silly. 
+	# This is silly.
+		print("You missed something.")
 		pattern = re.compile(r"(?P<top>[\+-]?[\d\.]+)[/](?P<bottom>[\d\.]+)")
 		if not '/' in s:
 			return float(s)
@@ -17,6 +19,10 @@ def handleFraction(s):
 			return float(match.group("top"))/ float(match.group("bottom"))
 		return float(s)
 def roundUp(i):
+	"""
+	I'm sure this is unnecessary, but I apparently couldn't find a good way to
+	do it in the standard library, so I have this.
+	"""
 	if i%1 > 0:
 		return int(i)+1
 	return i
@@ -33,23 +39,23 @@ class Equation:
 			self.terms = [i for i in self.terms if i != '']
 			for i in self.terms:
 				if self.regexes['constant'].match(i):
-					self.coefficients[0] += handleFraction(i)  # "+5"
+					self.coefficients[0] += Fraction(i)  # "+5"
 				elif self.regexes['normal'].match(i):
 					match = self.regexes['normal'].match(i)
 					if match.group("number") and match.group("number") != '+':
 						if match.group("number") == "-":
-							self.coefficients[handleFraction(match.group("exponent"))] -= 1
+							self.coefficients[Fraction(match.group("exponent"))] -= 1
 						else:
-							self.coefficients[handleFraction(match.group("exponent"))] += handleFraction(match.group("number")) # '2'
+							self.coefficients[Fraction(match.group("exponent"))] += Fraction(match.group("number")) # '2'
 					else:
-						self.coefficients[handleFraction(match.group("exponent"))] += 1
+						self.coefficients[Fraction(match.group("exponent"))] += 1
 				elif self.regexes["first"].match(i):
 					match = self.regexes["first"].match(i)
 					if match.group("number") and match.group("number") != "+":
 						if match.group("number") == '-':
 							self.coefficients[1] -= 1
 						else:
-							self.coefficients[1]+=handleFraction(match.group('number'))  	#"-3"
+							self.coefficients[1]+=Fraction(match.group('number'))  	#"-3"
 					else:
 						self.coefficients[1]+=1
 		elif type(eq) == type({}):

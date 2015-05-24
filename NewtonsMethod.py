@@ -25,10 +25,10 @@ except ValueError:
 			break
 		elif clock() > 10:
 			print("I couldn't find a root after {} tries".format(len(x_terms)))
-			pprint.PrettyPrinter().pprint(x_terms[-10:])
+			pprint(x_terms[-10:])
 			input()
 			clock_break = True
-if not clock_break:				
+if not clock_break:
 	pprint.PrettyPrinter().pprint(x_terms)
 	print("The result is {}".format(x_terms[-1]))
 	input()
