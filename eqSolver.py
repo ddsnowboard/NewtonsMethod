@@ -16,11 +16,16 @@ class Equation:
 	This is an object that represents a polynomial equation.
 	It isn't terribly extensible, so you have to be careful what
 	you give it. It will take decimals and fractions as coefficients,
-	and in exponents?
+	and in exponents.
 	"""
 	def __init__(self, eq):	# y=2x^2-3x+5
+	# If the equation is already a string, we have to turn it into an Equation
+	# object.
 		if type(eq) == type(""):
-			self.regexes = {"normal" : re.compile(r"(?P<number>[\+-]?([\d\./])*)?[A-Za-z][\^](?P<exponent>[0-9/]+)"),
+			eq = eq.replace(" ", "")
+			# "normal" is an exponent greater than 1. "first" is an exponent of
+			# 1.
+			self.regexes = {"normal" : re.compile(r"(?P<number>[\+-]?([\d\./])*)?[A-Za-z][\^](?P<exponent>[0-9/.]+)"),
 							"constant" : re.compile(r"^[\+-]?[\d/^]+$"),
 							"first" : re.compile(r"(?P<number>[\+-]?[\d\./]*)?[A-Za-z]")}
 			self.coefficients = defaultdict(float)
@@ -63,7 +68,7 @@ class Equation:
 			try:
 				end+=j*x**i
 			except ZeroDivisionError:
-				raise Exception("I had to divide by zero. I either can't do this equation or you gave me a bad x1. Try again")
+				raise Exception("I had to divide by zero.")
 		return end
 	def zero(self):
 		if not self.degree == 2:
