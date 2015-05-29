@@ -56,7 +56,13 @@ class EquationSolverTest(unittest.TestCase):
         eqn = eqSolver.Equation("y = 2 x ^2 /  3- 23x   ^4- 3 3 x^4")
         for i in range(1000):
             with self.subTest(number=i):
-                self.assertAlmostEqual(eqn(i), 2 * i ** (2/3) - 23 * i ** 4 - 33 * i ** 4, delta=1) # The numbers are too big, so I have to use assertAlmostEqual. 
+                self.assertAlmostEqual(eqn(i), 2 * i ** (2/3) - 23 * i ** 4 - 33 * i ** 4, delta=1) # The numbers are too big, so I have to use assertAlmostEqual.
+    def test_Degree(self):
+       s = ""
+       for i in range(1, 50):
+           with self.subTest():
+               s += "+2x^{}".format(i)
+               self.assertEqual(eqSolver.Equation(s).degree, i)
 if __name__ == "__main__":
     unittest.main()
     input()

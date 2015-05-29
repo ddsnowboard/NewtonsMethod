@@ -8,7 +8,7 @@ def roundUp(i):
 	I'm sure this is unnecessary, but I apparently couldn't find a good way to
 	do it in the standard library, so I have this.
 	"""
-	if i%1 > 0:
+	if i % 1 > 0:
 		return int(i)+1
 	return i
 class Equation:
@@ -51,17 +51,14 @@ class Equation:
 						if match.group("number") == '-':
 							self.coefficients[1] -= 1
 						else:
-							self.coefficients[1]+=Fraction(match.group('number'))  	#"-3"
+							self.coefficients[1] += Fraction(match.group('number'))  	#"-3"
 					else:
-						self.coefficients[1]+=1
+						self.coefficients[1] += 1
 		elif type(eq) == type({}):
 			self.coefficients = defaultdict(float)
 			for i, j in eq.items():
 				self.coefficients[i] = j
-		self.degree = 0
-		for i, j in self.coefficients.items():
-			if i > self.degree:
-				self.degree = i
+		self.degree = max(self.coefficients.keys())
 	def evaluate(self, x):
 		end = 0
 		for i, j in self.coefficients.items():
