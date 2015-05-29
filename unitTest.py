@@ -2,7 +2,7 @@ import unittest
 import NewtonsMethod, eqSolver
 
 class EquationSolverTest(unittest.TestCase):
-    def test_roundUp(self):
+    def test_RoundUp(self):
         """
         This tests the roundUp() function
         """
@@ -58,11 +58,38 @@ class EquationSolverTest(unittest.TestCase):
             with self.subTest(number=i):
                 self.assertAlmostEqual(eqn(i), 2 * i ** (2/3) - 23 * i ** 4 - 33 * i ** 4, delta=1) # The numbers are too big, so I have to use assertAlmostEqual.
     def test_Degree(self):
+        """
+        Makes sure that the degree counting functionality works.
+        """
        s = ""
        for i in range(1, 50):
            with self.subTest():
                s += "+2x^{}".format(i)
                self.assertEqual(eqSolver.Equation(s).degree, i)
+    def test_Dictionary(self):
+        """
+        Makes sure that the Equation constructor takes a dictionary properly.
+        """
+        d = {2:2, 1:-5, 0:3}
+        eqn = eqSolver.Equation(d)
+        for i in range(1000):
+            with self.subTest(number=i):
+                self.assertEqual(eqn(i), 2*i**2-5*i+3)
+    def test_Zero(self):
+        """
+        Checks some things on the Equation.zero() function.
+        """
+        eqns = [(eqSolver.Equation("x^2-6x+9"),(3.0, 3.0)), (eqSolver.Equation("x^2"), (0.0, 0.0)), (eqSolver.Equation("x^2-2x-15"), (-3.0, 5.0)), (eqSolver.Equation("x^2+x+15"), None)]
+        for i, j in eqns:
+            with self.subTest(equation=i):
+                self.assertEqual(i.zero(), j)
+        eq = eqSolver.Equation("5x")
+        with self.subTest(equation=eq):
+            with self.assertRaises(eqSolver.ZeroError):
+                eq.zero()
+        eq = eqSolver.Equation("x^2-2x^.5+4x")
+        with self.subTest(equation=eq):
+            with self.assertRaises(eqSolver.ZeroError):
+                print(eq.zero())
 if __name__ == "__main__":
     unittest.main()
-    input()
