@@ -12,6 +12,9 @@ def roundUp(i):
 		return int(i)+1
 	return i
 class ZeroError(Exception):
+	"""
+	Thrown when a zero cannot be found for an Equation
+	"""
 	pass
 class Equation:
 	"""
@@ -128,7 +131,7 @@ class Equation:
 			return right == 0
 		elif self.degree <= 1 and other.degree <= 1 :
 			return (right/left[1], self.evaluate(right/left[1]))
-		# Runs the quadratic equation if a degree is two. 
+		# Runs the quadratic equation if a degree is two.
 		elif self.degree == 2 or other.degree == 2:
 			return (((-1*left[1]+math.sqrt(left[1]**2-4*(left[2])*(-1*right)))/(2*left[2]), self.evaluate((-1*left[1]+math.sqrt(left[1]**2-4*(left[2])*(-1*right)))/(2*left[2]))), ((-1*left[1]-math.sqrt(left[1]**2-4*(left[2])*(-1*right)))/(2*left[2]), self.evaluate((-1*left[1]-math.sqrt(left[1]**2-4*(left[2])*(-1*right)))/(2*left[2]))))
 		else:
@@ -178,3 +181,12 @@ class Equation:
 		self.coefficients[key] = value
 	def __call__(self, x):
 		return self.evaluate(x)
+	@staticmethod
+	def inputCheck(input):
+		RE = re.compile(r"[^x0-9+-\^]")
+		input = input.replace(" ","").replace("y=","").replace("=y","")
+		return not RE.findall(input)
+	@staticmethod
+	def numberCheck(input):
+		RE = re.compile(r"[^0-9 ]+")
+		return (not RE.findall(input)) or input == ""

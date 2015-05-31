@@ -21,11 +21,21 @@ def newtonsMethod(*, eqn, x_terms, initial_x):
 			elif clock() > 10:
 				return output
 if __name__ == "__main__":
-	eqn = eqSolver.Equation((input("What is the polynomial equation you want? ")))
-	try:
+	while True:
+		eqn = eqSolver.Equation((input("What is the polynomial equation you want? ")))
+		if eqSolver.Equation.inputCheck(eqn):
+			break
+		else:
+			print("That was not a valid equation. Please try again. \n")
+	while True:
 		x_terms = int(input("How many times do you want to do the method? Or type nothing if you want to do it until it yields the answer. "))
-	except ValueError:
-		x_terms = None
-	initial_x = int(input("What x value should I start with?\n"))
+		if eqSolver.Equation.numberCheck(x_terms):
+			if x_terms == "":
+				x_terms = None
+			break
+	while True:
+		initial_x = int(input("What x value should I start with?\n"))
+		if eqSolver.Equation.numberCheck(initial_x):
+			break
 	print(newtonsMethod(eqn=eqn, x_terms=x_terms, initial_x=initial_x)[-10:])
 	input()

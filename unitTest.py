@@ -61,8 +61,8 @@ class EquationSolverTest(unittest.TestCase):
         """
         Makes sure that the degree counting functionality works.
         """
-       s = ""
-       for i in range(1, 50):
+        s = ""
+        for i in range(1, 50):
            with self.subTest():
                s += "+2x^{}".format(i)
                self.assertEqual(eqSolver.Equation(s).degree, i)
@@ -91,5 +91,24 @@ class EquationSolverTest(unittest.TestCase):
         with self.subTest(equation=eq):
             with self.assertRaises(eqSolver.ZeroError):
                 print(eq.zero())
+    def test_input_checking(self):
+        """
+        Makes sure the input checking on NewtonsMethod works
+        right
+        """
+        s = [("2x^2-5x+5=y",True), ("2x^2-5x+4", True), ("5z-5x^4+3",False), ("2x-5=t", False)]
+        for i, j in s:
+            with self.subTest(s=i):
+                self.assertEqual(eqSolver.Equation.inputCheck(i), j)
+    def test_number_check(self):
+        """
+        Makes sure that the function that checks that the inputs for
+        initial x and number of runs are numbers
+        """
+        s = [("2", True), ("a", False), ("23", True), ("2a", False), ("", True)]
+        for i, j in s:
+            with self.subTest(string=i):
+                self.assertEqual(bool(eqSolver.Equation.numberCheck(i)), j)
+
 if __name__ == "__main__":
     unittest.main()
